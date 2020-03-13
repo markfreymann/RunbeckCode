@@ -9,8 +9,8 @@ namespace RunbeckCodeExercise
 
         static void Main()
         {
-            // display title as the Runbeck Code Excercise.
-            Console.WriteLine("\nRunbeck Code Excercise (Process CSV/TSV) in C#\r");
+            // display title as the Runbeck Code Exercise.
+            Console.WriteLine("\nRunbeck Code Exercise (Process CSV/TSV) in C#\r");
             Console.WriteLine("Written by Mark Freymann 3/13/2020\r");
             Console.WriteLine("----------------------------------------------\n");
 
