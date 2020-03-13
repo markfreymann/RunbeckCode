@@ -1,6 +1,7 @@
 # RunbeckCode
 
 Runbeck Code Exercise
+
 Write an application (a Console Application is fine) to process a delimited text file. The file will have a header row, then one row per record. The records may be comma-separated or tab-separated. 
 An example file’s contents could be:
   First Name,Middle Name,Last Name
