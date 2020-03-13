@@ -12,6 +12,7 @@ namespace RunbeckCodeExercise
             // display title as the Runbeck Code Excercise.
             Console.WriteLine("\nRunbeck Code Excercise (Process CSV/TSV) in C#\r");
             Console.WriteLine("Written by Mark Freymann 3/13/2020\r");
+            Console.WriteLine("----------------------------------------------\n");
 
             RunProgram();
         }
@@ -22,7 +23,6 @@ namespace RunbeckCodeExercise
             pi = new ProcessInfo();
 
             // get required user input and validate
-            Console.WriteLine("----------------------------------------------\n");
             Console.WriteLine("Begin User Input (enter 'q' to quit)\n");
 
             // ask the user Where is the file located ?
@@ -43,10 +43,10 @@ namespace RunbeckCodeExercise
 
         static void ProcessFile()
         {
-            Console.WriteLine("Begin Process...\n");
+            Console.WriteLine("\nProcess Results:\n");
 
             // read the file line by line.  
-            using StreamReader file = new StreamReader(pi.FilePath);
+            using (StreamReader file = new StreamReader(pi.FilePath))
             {
                 string line;
                 while ((line = file.ReadLine()) != null) // loop while line exists
@@ -57,23 +57,18 @@ namespace RunbeckCodeExercise
                         if (line.Split(pi.Delimiter).Length == pi.FieldCount) // check if user input matches field count
                         { // valid line
                             pi.ValidCount++; // keep count of valid lines
-                            // open ValidFile and write line
-                            StreamWriter ValidFile = new System.IO.StreamWriter(pi.ValidPath, pi.ValidCount > 1);
-                            ValidFile.WriteLine(line);
-                            ValidFile.Close();
+                            // open ValidFile and write line, exit module on error
+                            if (!WritetoFile(pi.ValidPath, line, pi.ValidCount > 1)) return;
                         }
                         else
                         { // invalid line
                             pi.InValidCount++; // keep count of invalid lines
-                            // open InValidFile and write line
-                            StreamWriter InValidFile = new System.IO.StreamWriter(pi.InValidPath, pi.InValidCount > 1);
-                            InValidFile.WriteLine(line);
-                            InValidFile.Close();
+                            // open InValidFile and write line, exit module on error
+                            if (!WritetoFile(pi.InValidPath, line, pi.InValidCount > 1)) return;
                         }
                     }
                 }
-            }
-            file.Close();
+            };
 
             if (pi.Count > 0) // show results of process (if any)
             {
@@ -85,6 +80,25 @@ namespace RunbeckCodeExercise
                 Console.WriteLine("There were no lines in file.");
 
             Console.WriteLine("\nProcess Complete\n");
+            Console.WriteLine("----------------------------------------------\n");
+        }
+
+        static bool WritetoFile(string Path, string Line, bool Append)
+        {
+            try
+            {
+                using (StreamWriter File = new System.IO.StreamWriter(Path, Append))
+                {
+                    File.WriteLine(Line);
+                };
+                return true; // success
+            }
+            catch (UnauthorizedAccessException) // catch if write is denied
+            {
+                Console.Write("UnAuthorizedAccessException: \nUnable to write to file '{0}'\n", Path);
+                Console.WriteLine("----------------------------------------------\n");
+                return false; // fail
+            }
         }
 
         #region Validation
